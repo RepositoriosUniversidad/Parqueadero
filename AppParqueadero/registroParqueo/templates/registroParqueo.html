@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'index/css/b4.css' %}">
+<script src="{% static 'index/js/b4.js' %}"></script>
+
+
+<div id="AgregarAutomovilModal" class="modal" style="overflow: scroll;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-dark">Agregar nuevo</h5>
+            </div>
+            <div class="modal-body bg-dark text-white">
+                <form method="POST" action="{% url 'AddAutomovil' %}" enctype="multipart/form-data">{% csrf_token %}
+                    {% for field in form_auto %}
+                    <p>{{field.label}} <br>
+                        {{field|add_class:"form-control text-dark"}}</p>
+                    {% for error in field.errors %}
+                    <p class="alarma">{{error}}</p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <p class="alarma">{{error}}</p>
+                    {% endfor %}
+            </div>
+            <div class="modal-footer bg-dark">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-success">
+                    Agregar
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="EditarAutomovilModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-dark">Editar</h5>
+            </div>
+            <div class="modal-body bg-dark text-white">
+                <form method="POST" action="{% url 'EditAutomovil' %}" enctype="multipart/form-data">{% csrf_token %}
+                    <input type="hidden" id="id_automovil_editar" name="id_automovil_editar">
+                    {% for field in form_editar %}
+                    <p> {{field.label}} <br>
+                        {{field|add_class:"form-control"}}</p>
+                    {% for error in field.errors %}
+                    <p class="alarma">{{error}}</p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <p class="alarma">{{error}}</p>
+                    {% endfor %}
+            </div>
+            <div class="modal-footer bg-dark text-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                   Volver
+                </button>
+                <button type="submit" class="btn btn-success">
+                    Aceptar
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="EliminarAutomovilModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-dark">Eliminar</h5>
+            </div>
+            <div class="modal-body bg-dark text-white">
+                <p class="labelmodal">¿Estás seguro?</p>
+                <form method="POST" action="{% url 'DeleteAutomovil' %}">{% csrf_token %}
+                    <input type="hidden" id="id_automovil_eliminar" name="id_automovil_eliminar">
+            </div>
+            <div class="modal-footer bg-dark text-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                   Volver
+                </button>
+                <button type="submit" class="btn btn-success">
+                    Aceptar
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="imprimirTicketModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-dark">Imprimir Ticket</h5>
+            </div>
+            <div class="modal-body bg-dark text-white">
+                <form method="POST" action="{% url 'imprimirTicket' %}" enctype="multipart/form-data">{% csrf_token %}
+                    {% for field in form_ticket %}
+                    <p> {{field.label}} <br>
+                        {{field|add_class:"form-control"}}</p>
+                    {% for error in field.errors %}
+                    <p class="alarma">{{error}}</p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <p class="alarma">{{error}}</p>
+                    {% endfor %}
+            </div>
+            <div class="modal-footer bg-dark text-white">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                   Volver
+                </button>
+                <button type="submit" class="btn btn-success">
+                    Aceptar
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-center">Automovil   <i class="fas fa-car-side"></i></h3>
+        <div class="col-md-3 pb-2">
+            <a href="#AgregarAutomovilModal"
+                data-toggle="modal" data-dismiss="modal">
+                <button type="button" class="btn btn-success">
+                    Agregar Automovil
+                    <i class="fas fa-plus-circle"></i>
+                </button>
+            </a>
+        </div>
+        <div class="card card-body" style="overflow:scroll">
+            <table class="table table-hover table-primary" id="myTable">
+                <thead>
+                    <tr>
+                        <th># ID</th>
+                        <th>Placa</th>
+                        <th>Modelo</th>
+                        <th>Color</th>
+                        <th>Hora Entrada</th>
+                        <th>Hora Salida</th>
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for i in autos %}
+                    <tr>
+                        <td>{{i.id}}</td>
+                        <td>{{i.placa}}</td>
+                        <td>{{i.modelo}}</td>
+                        <td>{{i.color}}</td>
+                        <td>{{i.horaEntrada}}</td>
+                        <td>{{i.horaSalida}}</td>
+                        <td>
+                            <button onclick="editarAuto('{{i.id}}', '{{i.placa}}', '{{i.modelo}}', '{{i.color}}', '{{i.horaEntrada}}', '{{i.horaSalida}}',)" class="btn btn-dark-outline btn-sm" data-toggle="modal"
+                                href="#EditarAutomovilModal"><img src="{% static 'index/img/editar.png' %}" alt="Error"
+                                    width="30"></button>
+                            <button onclick="eliminarAutomovil('{{i.id}}')" class="btn btn-dark-outline btn-sm"
+                                data-toggle="modal" href="#EliminarAutomovilModal"><img
+                                    src="{% static 'index/img/delete.png' %}" alt="Error" width="30"></button>
+                            <button onclick="imprimirTicket('{{i.id}}')" class="btn btn-dark-outline btn-sm"
+                                data-toggle="modal" href="#imprimirTicketModal"><img
+                                    src="{% static 'index/img/out.png' %}" alt="Error" width="30"></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% if messages %}
+{% for message in messages %}
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Error...',
+        text: "{{message}}",
+    })
+</script>
+{% endfor %}
+{% endif %}
+{% endblock %}
