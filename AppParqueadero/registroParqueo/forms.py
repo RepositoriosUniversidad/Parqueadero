@@ -77,14 +77,7 @@ class EditarAutomovilForm(forms.ModelForm):
             'horaSalida': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
         
-class imprimirTicketForm(forms.ModelForm):
-    class Meta:
-        fields = ('placa', 'tiempo', 'valor')
-        labels = {
-            'placa': 'Placa: ',
-            'tiempo': 'Tiempo: ',
-            'valor': 'Valor:',
-        }
+
         
 
 
