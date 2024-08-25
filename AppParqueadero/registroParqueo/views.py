@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Cliente, Autos
-from .forms import AddClienteForm, EditarClienteForm, AddAutomovilForm, EditarAutomovilForm
+from .forms import AddClienteForm, EditarClienteForm, AddAutomovilForm, EditarAutomovilForm, imprimirTicketForm
 from django.contrib import messages
 
 # Create your views here.
@@ -9,10 +9,12 @@ def registroParqueo(request):
     autos = Autos.objects.all()
     form_auto = AddAutomovilForm()
     form_editar = EditarAutomovilForm()
+    form_ticket = imprimirTicketForm()
     context = {
         'autos': autos,
         'form_auto': form_auto,
-        'form_editar': form_editar
+        'form_editar': form_editar,
+        'form_ticket_auto': form_ticket,
     }
     return render(request,'registroParqueo.html',context)
 
@@ -79,6 +81,16 @@ def delete_automovil(request):
         auto = Autos.objects.get(pk=request.POST.get('id_automovil_eliminar'))
         auto.delete()
     return redirect('registroParqueo')
+
+def imprimir_ticket(request):
+    if request.POST:
+        form = imprimirTicketForm()
+        automovil = Autos.objects.get(pk=request.POST.get('id_automovil_editar'))
+        precioHora= form.cleaned_data.get('precio_Hora')
+        valor_a_pagar= form.cleaned_data.get('valor_a_pagar')
+    return redirect('registroParqueo')
+
+
 
 
 

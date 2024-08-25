@@ -10,4 +10,5 @@ urlpatterns = [
     path('add_automovil/', views.add_automovil, name='AddAutomovil'),
     path('edit_automovil/', views.edit_automovil, name='EditAutomovil'),
     path('delete_automovil/', views.delete_automovil, name='DeleteAutomovil'),
+    path('imprimir_Ticket/', views.imprimir_ticket, name='ImprimirTicket')
 ]

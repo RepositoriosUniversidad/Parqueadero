@@ -115,6 +115,14 @@ function editarAuto(id, placa, modelo, color, horaEntrada, horaSalida) {
   document.getElementById("horaSalida_editar").value = horaSalida;
 }
 
+function imprimirTicket(id, placa, horaEntrada, horaSalida) {
+  document.getElementById("id_automovil_editar").value = id;
+  document.getElementById("placa_editar").value = placa;
+  document.getElementById("horaEntrada_editar").value = horaEntrada;
+  document.getElementById("horaSalida_editar").value = horaSalida;
+  
+}
+
 function eliminarAutomovil(id) {
   document.getElementById("id_automovil_eliminar").value = id;
 }
