@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cliente, Autos
 from .forms import AddClienteForm, EditarClienteForm, AddAutomovilForm, EditarAutomovilForm, imprimirTicketForm
 from django.contrib import messages
@@ -82,14 +82,15 @@ def delete_automovil(request):
         auto.delete()
     return redirect('registroParqueo')
 
-def imprimir_ticket(request):
-    if request.POST:
-        form = imprimirTicketForm()
-        automovil = Autos.objects.get(pk=request.POST.get('id_automovil_editar'))
-        precioHora= form.cleaned_data.get('precio_Hora')
-        valor_a_pagar= form.cleaned_data.get('valor_a_pagar')
-    return redirect('registroParqueo')
-
+def imprimir_ticket(request, pk):
+    auto = Autos.objects.get(pk=pk)
+    form = imprimirTicketForm(initial={
+        'horaEntrada': auto.horaEntrada.strftime('%Y-%m-%dT%H:%M'),
+        'horaSalida': auto.horaSalida.strftime('%Y-%m-%dT%H:%M')
+    })
+    return redirect(request, 'registroParqueo', {'form': form})
+    
+    
 
 
 
