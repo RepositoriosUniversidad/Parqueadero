@@ -7,6 +7,9 @@ class Cliente(models.Model):
     codigo = models.CharField(max_length=200,unique=True)
     nombre = models.CharField(max_length=200)
     telefono = models.CharField(max_length=50)
+    fecha_ingreso = models.DateTimeField(null=True)
+    fecha_salida = models.DateTimeField(null=True)
+    valor_a_pagar = models.CharField(max_length=20,null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     

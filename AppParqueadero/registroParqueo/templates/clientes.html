@@ -118,7 +118,9 @@
                         <th>Código</th>
                         <th>Nombre</th>
                         <th>Telefono</th>
-                        <th>Opciones</th>
+                        <th>Fecha Ingreso</th>
+                        <th>Fecha Salida</th>
+                        <th>Valor a Pagar</th>
                     </tr>
                 </thead>
                 <tbody class="text-dark">
@@ -128,8 +130,11 @@
                         <td>{{i.codigo}}</td>
                         <td>{{i.nombre}}</td>
                         <td>{{i.telefono}}</td>
+                        <td>{{i.fecha_ingreso}}</td>
+                        <td>{{i.fecha_salida}}</td>
+                        <td>{{i.valor_a_pagar}}</td>
                         <td>
-                            <button onclick="editarPersonal('{{i.id}}', '{{i.codigo}}', '{{i.nombre}}', '{{i.telefono}}',)" class="btn btn-dark-outline btn-sm" data-toggle="modal"
+                            <button onclick="editarPersonal('{{i.id}}', '{{i.codigo}}', '{{i.nombre}}', '{{i.telefono}}','{{i.fecha_ingreso}}','{{i.fecha_salida}}','{{i.valor_a_pagar}}',)" class="btn btn-dark-outline btn-sm" data-toggle="modal"
                                 href="#EditarPersonalModal"><img src="{% static 'index/img/editar.png' %}" alt="Error"
                                     width="30"></button>
                             <button onclick="eliminarPersonal('{{i.id}}')" class="btn btn-dark-outline btn-sm"

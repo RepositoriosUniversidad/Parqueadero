@@ -82,13 +82,34 @@ def delete_automovil(request):
         auto.delete()
     return redirect('registroParqueo')
 
-def imprimir_ticket(request, pk):
-    auto = Autos.objects.get(pk=pk)
-    form = imprimirTicketForm(initial={
-        'horaEntrada': auto.horaEntrada.strftime('%Y-%m-%dT%H:%M'),
-        'horaSalida': auto.horaSalida.strftime('%Y-%m-%dT%H:%M')
-    })
-    return redirect(request, 'registroParqueo', {'form': form})
+from datetime import datetime
+
+def imprimir_ticket(request):
+    if request.POST:
+        automovil = Autos.objects.get(pk=request.POST.get('id_automovil_imprimir'))
+
+        # Obtener los valores de `horaEntrada` y `horaSalida` directamente del objeto `automovil`
+        hora_entrada = automovil.horaEntrada.strftime("%Y-%m-%dT%H:%M") if automovil.horaEntrada else None
+        hora_salida = automovil.horaSalida.strftime("%Y-%m-%dT%H:%M") if automovil.horaSalida else None
+        
+        # Crear el diccionario `initial` con estos valores
+        initial_data = {
+            'horaEntrada': hora_entrada,
+            'horaSalida': hora_salida
+        }
+
+        # Pasar estos datos al formulario
+        form = imprimirTicketForm(initial=initial_data)
+
+        context = {
+            'form_ticket_auto': form,
+            'autos': Autos.objects.all(),
+            'form_auto': AddAutomovilForm(),
+            'form_editar': EditarAutomovilForm(),
+        }
+
+        return render(request, 'registroParqueo.html', context)
+
     
     
 

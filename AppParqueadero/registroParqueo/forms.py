@@ -6,12 +6,20 @@ from datetime import datetime
 class AddClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ('codigo', 'nombre', 'telefono')
+        fields = ('codigo', 'nombre', 'telefono', 'fecha_ingreso', 'fecha_salida','valor_a_pagar')
         labels = {
             'codigo': 'Código Cliente: ',
             'nombre': 'Nombre Cliente: ',
-            'telefono': 'Teléfono Cliente',
+            'telefono': 'Teléfono Cliente:',
+            'fecha_ingreso': 'Fecha de ingreso:',
+            'fecha_salida': 'Fecha de salida:',
+            'valor_a_pagar': 'Valor a pagar:'
         }
+        widgets={
+            'fecha_ingreso': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
+            'fecha_salida': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
+        }
+        
     
     def clean_codigo(self):
         codigo = self.cleaned_data["codigo"]
@@ -19,20 +27,33 @@ class AddClienteForm(forms.ModelForm):
         if existe:
             raise ValidationError("Este nombre ya existe")
         return codigo
-
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_ingreso = cleaned_data.get('fecha_ingreso')
+        fecha_salida = cleaned_data.get('fecha_salida')
+        if fecha_ingreso >= fecha_salida:
+            raise ValidationError('La fecha de ingreso debe ser menor que la fecha de salida.')
+    
 class EditarClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ('codigo', 'nombre', 'telefono')
+        fields = ('codigo', 'nombre', 'telefono', 'fecha_ingreso', 'fecha_salida','valor_a_pagar')
         labels = {
             'codigo': 'Código Cliente: ',
             'nombre': 'Nombre Cliente: ',
             'telefono': 'Teléfono Cliente',
+            'fecha_ingreso': 'Fecha de ingreso:',
+            'fecha_salida': 'Fecha de salida:',
+            'valor_a_pagar': 'Valor a pagar:'
         }
         widgets= {
             'codigo': forms.TextInput(attrs={'type':'text', 'id': 'codigo_editar'}),
             'nombre': forms.TextInput(attrs={'id': 'nombre_editar'}),
-            'telefono': forms.TextInput(attrs={'id': 'telefono_editar'})
+            'telefono': forms.TextInput(attrs={'id': 'telefono_editar'}),
+            'fecha_ingreso': forms.DateInput(attrs={'type': 'date-local','id':'fecha_ingreso_editar'}),
+            'fecha_salida': forms.DateInput(attrs={'type': 'date-local','id':'fecha_salida_editar'}),
+            'valor_a_pagar': forms.TextInput(attrs={'id': 'valor_a_pagar_editar'})
         }
         
 
@@ -65,7 +86,8 @@ class AddAutomovilForm(forms.ModelForm):
         hora_salida = cleaned_data.get('horaSalida')
         if hora_entrada >= hora_salida:
             raise ValidationError('La hora de entrada debe ser menor que la hora de salida.')
-        
+    
+     
 class EditarAutomovilForm(forms.ModelForm):
     class Meta:
         model = Autos
@@ -81,8 +103,8 @@ class EditarAutomovilForm(forms.ModelForm):
             'placa': forms.TextInput(attrs={'type':'text', 'id': 'placa_editar'}),
             'modelo': forms.TextInput(attrs={'id': 'modelo_editar'}),
             'color': forms.TextInput(attrs={'id': 'color_editar'}),
-            'horaEntrada': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'horaSalida': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'horaEntrada': forms.DateTimeInput(attrs={'type': 'datetime-local', 'id': 'horaEntrada_editar'}),
+            'horaSalida': forms.DateTimeInput(attrs={'type': 'datetime-local', 'id': 'horaSalida_editar'}),
         }
         
 class imprimirTicketForm(forms.ModelForm):
@@ -96,17 +118,16 @@ class imprimirTicketForm(forms.ModelForm):
             'horaSalida': 'Hora Salida:',
         }
         widgets= {
-            'horaEntrada': forms.TextInput(attrs={'id': 'horaEntrada_editar', 'readonly':'readonly'}),
-            'horaSalida': forms.TextInput(attrs={'id': 'horaSalida_editar', 'readonly':'readonly'}),
+            'horaEntrada': forms.TextInput(attrs={'id': 'horaEntrada_imprimir'}),
+            'horaSalida': forms.TextInput(attrs={'id': 'horaSalida_imprimir'}),
             
         }
-            
-       
+        
     def __init__(self, *args, **kwargs):
         super(imprimirTicketForm, self).__init__(*args, **kwargs)
         # Asignar valores fijos
         self.fields['precioHora'].initial = '2000'  # Ejemplo: Precio por hora fijo
-        # Obtener datos iniciales
+       
         hora_entrada = self.initial.get('horaEntrada')
         hora_salida = self.initial.get('horaSalida')
         print(hora_entrada)
