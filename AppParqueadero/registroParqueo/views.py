@@ -94,8 +94,8 @@ def imprimir_ticket(request):
         
         # Crear el diccionario `initial` con estos valores
         initial_data = {
-            'horaEntrada': hora_entrada,
-            'horaSalida': hora_salida
+            'horaEntrada_imprimir': hora_entrada,
+            'horaSalida_imprimir': hora_salida
         }
 
         # Pasar estos datos al formulario

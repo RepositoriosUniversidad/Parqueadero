@@ -85,17 +85,7 @@
             <div class="modal-body bg-dark text-white">
                 <form method="POST" action="{% url 'ImprimirTicket' %}" enctype="multipart/form-data">{% csrf_token %}
                     <input type="hidden" id="id_automovil_imprimir" name="id_automovil_imprimir">
-                    <p> Hora Entrada: <br>
-                        <input type="datetime-local" id="horaEntrada_imprimir" value="{{ i.horaEntrada}}" class="form-control" name="horaEntrada" readonly>
-                    </p>
                     
-                    <p> Hora Salida: <br>
-                        <input type="datetime-local" id="horaSalida_imprimir" value="{{ i.horaSalida}}" class="form-control" name="horaSalida" readonly>
-                    </p>
-
-                    <p> Valor a Pagar: <br>
-                        <input type="text" id="valor_a_pagar" class="form-control" name="valor_a_pagar" readonly>
-                    </p>
                     {% for field in form_ticket_auto %}
                     <p> {{field.label}} <br>
                         {{field|add_class:"form-control"}}</p>
@@ -210,36 +200,3 @@
 {% endif %}
 {% endblock %}
 
-<script>
-    function calcularValorAPagar() {
-        const precioPorHora = 2000;  // Precio por hora (ajusta según tus necesidades)
-        const horaEntradaStr = document.getElementById("horaEntrada_imprimir").value;
-        const horaSalidaStr = document.getElementById("horaSalida_imprimir").value;
-    
-        if (horaEntradaStr && horaSalidaStr) {
-            const horaEntrada = new Date(horaEntradaStr);
-            const horaSalida = new Date(horaSalidaStr);
-    
-            // Calcular la diferencia en horas
-            const diferenciaMilisegundos = horaSalida - horaEntrada;
-            const diferenciaHoras = diferenciaMilisegundos / (1000 * 60 * 60);
-    
-            if (diferenciaHoras > 0) {
-                // Calcular el valor a pagar
-                const valorAPagar = diferenciaHoras * precioPorHora;
-                document.getElementById("valor_a_pagar").value = valorAPagar.toFixed(2);
-            } else {
-                document.getElementById("valor_a_pagar").value = "0.00";
-                alert("La hora de salida debe ser mayor que la hora de entrada.");
-            }
-        }
-    }
-    
-    function imprimirTicket(id, placa, horaEntrada, horaSalida) {
-        document.getElementById("id_automovil_imprimir").value = id;
-        document.getElementById("horaEntrada_imprimir").value = horaEntrada;
-        document.getElementById("horaSalida_imprimir").value = horaSalida;
-    
-        calcularValorAPagar(); // Calcular el valor al abrir el modal
-    }
-    </script>

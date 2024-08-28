@@ -51,11 +51,18 @@ class EditarClienteForm(forms.ModelForm):
             'codigo': forms.TextInput(attrs={'type':'text', 'id': 'codigo_editar'}),
             'nombre': forms.TextInput(attrs={'id': 'nombre_editar'}),
             'telefono': forms.TextInput(attrs={'id': 'telefono_editar'}),
-            'fecha_ingreso': forms.DateInput(attrs={'type': 'date-local','id':'fecha_ingreso_editar'}),
-            'fecha_salida': forms.DateInput(attrs={'type': 'date-local','id':'fecha_salida_editar'}),
+            'fecha_ingreso': forms.DateTimeInput(attrs={'type': 'datetime-local', 'id': 'fecha_ingreso_editar'}),
+            'fecha_salida': forms.DateTimeInput(attrs={'type': 'datetime-local', 'id': 'fecha_salida_editar'}),
             'valor_a_pagar': forms.TextInput(attrs={'id': 'valor_a_pagar_editar'})
         }
-        
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_ingreso = cleaned_data.get('fecha_ingreso')
+        fecha_salida = cleaned_data.get('fecha_salida')
+        if fecha_ingreso >= fecha_salida:
+            raise ValidationError('La fecha de ingreso debe ser menor que la fecha de salida.')
+    
 
 class AddAutomovilForm(forms.ModelForm):
     class Meta:
